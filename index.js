@@ -1,5 +1,6 @@
 const express = require("express");
 const { MongoClient } = require('mongodb');
+const ObjectId = require("mongodb").ObjectId
 const cors = require('cors')
 require('dotenv').config();
 const app = express();
@@ -16,17 +17,22 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect()
-        console.log("data base connected");
 
         const database = client.db("bestTourPlane")
         const tourOfferCollection = database.collection("bestOffer")
-
+        // find multiple offer
         app.get("/tourOffer", async (req, res) => {
             const cursor = await tourOfferCollection.find({}).toArray()
-            // const cursor = tourOfferCollection.find({})
-            // const tourResult = await cursor.toArray()
             res.send(cursor)
+        });
+        // find single offer
+        app.get("/tourOffer/:id", async (req, res) => {
+            const id = req.params.id
+            const singleId = { _id: ObjectId(id) }
+            const result = await tourOfferCollection.findOne(singleId)
+            res.send(result)
         })
+
 
     }
     finally {
