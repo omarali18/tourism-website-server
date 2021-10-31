@@ -20,6 +20,7 @@ async function run() {
 
         const database = client.db("bestTourPlane")
         const tourOfferCollection = database.collection("bestOffer")
+        const clientCollection = database.collection("clientDb")
         // find multiple offer
         app.get("/tourOffer", async (req, res) => {
             const cursor = await tourOfferCollection.find({}).toArray()
@@ -31,6 +32,13 @@ async function run() {
             const singleId = { _id: ObjectId(id) }
             const result = await tourOfferCollection.findOne(singleId)
             res.send(result)
+        });
+        // sit client detail
+        app.post("/client", async (req, res) => {
+            const client = (req.body);
+            const result = await clientCollection.insertOne(client)
+            console.log(result);
+            res.json(result)
         })
 
 
