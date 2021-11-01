@@ -37,8 +37,35 @@ async function run() {
         app.post("/client", async (req, res) => {
             const client = (req.body);
             const result = await clientCollection.insertOne(client)
+            res.json(result)
+        });
+        // find client detail
+        app.get("/allclient/:name", async (req, res) => {
+            const name = req.params.name
+            const result = await clientCollection.find({ name: `${name}` }).toArray()
+            // console.log(result);
+            res.send(result)
+        });
+        // delete single order
+        app.delete("/clientorder/:id", async (req, res) => {
+            const id = req.params.id
+            const deleteId = { _id: ObjectId(id) }
+            const result = await clientCollection.deleteOne(deleteId)
+            res.json(result)
+        })
+        // find all cliend derail
+        app.get("/ManageAllOrders", async (req, res) => {
+            const result = await clientCollection.find({}).toArray()
+            res.send(result)
+        });
+        // Add a new offer
+        app.post("/newOffer", async (req, res) => {
+            const newOffer = req.body
+            console.log(newOffer);
+            const result = await tourOfferCollection.insertOne(newOffer)
             console.log(result);
             res.json(result)
+
         })
 
 
